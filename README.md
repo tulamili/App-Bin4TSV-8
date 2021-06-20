@@ -31,71 +31,21 @@ setopt interactivecomments
 # ↑ もしも上記を解除したくなった場合は unsetopt interactivecomments
 ```
 
-# 記事本体に書かれたコマンドライン
-
-この節は、記事本体に書かれたコマンドラインについて、多めに別のコマンドラインも追加して、
-シェル環境で1行ずつ実行すれば、意味が理解出来るように、コマンドラインが書かれています。
-
-## シェル芸等
-
-元の記事の「データ分析の難しさ」の節に書かれたコマンドラインを理解するためのコマンドラインを
-集めました。
-
-### 頻度表の作成
-
-「シェル芸はちょっとした機能要求に答えづらい」の解説にあった頻度表の作成をするとは
-どういうことかを、例を使って理解出来る様なコマンドラインです。↓
+### 本レポジトリコマンドを別個にインストールする方法
 
 ```
-# 自作関数y : 引数を1文字ずつバラして改行文字を挿入
-
-function y(){ echo -n $* | perl -pe's/./$&\n/g'; }
-which y
-y ABC
-y 12345
-y ABBCCCC
-
-
-# 頻度表(1元分割表)を作るコマンド
-
-y ABBCCCC | sort | uniq -c
-y ABBCCCC | sort | uniq -c | sort -nr
+cpanm App::csv2tsv #←Text::CSVに依存. 約20秒
+cpanm App::expandtab #← Text::VisualWidthに依存
+cpanm App::colsummary # 残りは、それぞれ約2秒で完了
+cpanm App::venn # モジュール名はApp::コマンド名
+cpanm App::csel # アンインストールの時は -U を使う↓
+cpanm App::crosstable # 例. cpanm -U App::csel
+cpanm App::freq # cpanm -vでインストール詳細を表示
+cpanm App::digitdemog
 ```
 
-### 「2列目を末尾に移動する」
 
-「AWKでも列の基本操作で困難が多い」の解説にあった `awk {print $1,$3,$2}`を
-理解出来る様なコマンドラインです。↓
-```
-# 2列目を末尾に移動する
-
-echo "A BB CCC"
-echo "A BB CCC" | awk '{print $1,$3,$2}'
-awk '{print $1,$3,$2}' <(echo "A BB CCC")
-
-perl -E '$x="AA"; say join " ", map {$x++} 1..3 for 1..10 # 3列で10行のデータ'
-perl -E '$x="AA"; say join " ", map {$x++} 1..3 for 1..10' | awk '{print$1,$3,$2}'
-awk '{print$1,$3,$2}' <(perl -E '$x="AA"; say join " ", map {$x++} 1..3 for 1..10')
-
-function 七行(){ perl -E"\$x='AA'; say join' ',map{\$x++}1..$* for 1..7" ; }
-七行 3
-七行 3 | awk '{print $1,$3,$2}'
-awk '{print $1,$3,$2}' <( 七行 3 )
-
-七行 10
-七行 20
-
-七行 10 | awk '{print $1,$3,$4,$5,$6,$7,$8,$9,$10,$2} # ここでは、AWKの押下キー数の多さを伝えたい'
-七行 20 | awk '{print $1,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$2}'
-七行 10 | awk '{printf$1 OFS;for(i=3;i<10;i++){printf$i OFS};print$2}# for文を使っても複雑になる'
-```
-
-## Perl製コマンド群の最初の解説
-
-記事本体の「表形式データを扱う新しいPerl製コマンド群」の節に相当する部分のコマンドラインを
-ここから記載します。
-
-### TSVデータに変換する
+### CSV形式からTSV形式に変換する(csv2tsv)
 
 ここではCSV形式のデータの例として、厚生労働省のサイトの「オープンデータ」の「**PCR検査実施人数**」のデータと、
 内閣府ホームページの「**国民の祝日について**」(**昭和30年（1955年）から令和4年（2022年）国民の祝日**)を取得し、
@@ -131,21 +81,6 @@ nkf syukujitsu.csv | less
 nkf syukujitsu.csv | csv2tsv > syukujitsu.tsv
 less -x25 syukujitsu.tsv
 ```
-
-### 記事本体で新しく紹介されたコマンドのインストール
-
-```
-cpanm App::csv2tsv #←Text::CSVに依存. 約20秒
-cpanm App::expandtab #← Text::VisualWidthに依存
-cpanm App::colsummary # 残りは、それぞれ約2秒で完了
-cpanm App::venn # モジュール名はApp::コマンド名
-cpanm App::csel # アンインストールの時は -U を使う↓
-cpanm App::crosstable # 例. cpanm -U App::csel
-cpanm App::freq # cpanm -vでインストール詳細を表示
-cpanm App::digitdemog
-```
-
-## データの不具合を検出するために
 
 ### 列を縦に揃えて表示する機能(expandtab)
 
@@ -283,7 +218,6 @@ X1*X2 1980 1981 1982 1983 1984 1985 1986 1987 1988 1989 1990 1991 1992 1993 1994
 12    0    0    0    0    0    0    0    0    0    1    2    1    1    1    1    1    1    1    1    1    1    2    1    1    1    1    1    2    1    1    1    1    2    1    1    1    1    1    2    0    0    0    0
 ```
 
-## データの意味理解
 
 ### 頻度表の作成(freq)
 

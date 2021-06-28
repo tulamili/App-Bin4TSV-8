@@ -4,6 +4,7 @@ This module provides a Unix-like commands:
  colsummary
  crosstable
  csel
+ csv2tsv
  digitdemog
  expandtab
  freq

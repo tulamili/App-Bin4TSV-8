@@ -11,6 +11,7 @@ Note that :
 
 
    App::colsummary
+   App::colgrep
    App::crosstable  
    App::csel
    App::csv2tsv    # This will also install Text::CSV

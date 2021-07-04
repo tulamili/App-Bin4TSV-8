@@ -7,7 +7,6 @@ This module provides a Unix-like commands:
  csv2tsv
  digitdemog
  expandtab
- freq
  venn
 
 
